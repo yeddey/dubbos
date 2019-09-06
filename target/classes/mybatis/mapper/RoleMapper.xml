@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="com.yed.dubbo.dao.RoleMapper">
+	
+		
+		<select id="getRoleList" resultType="map">
+			
+				select a.*,GROUP_CONCAT(c.qname) as qnames from role a LEFT JOIN role_quan b on a.rid=b.rid LEFT JOIN quan c on b.qid=c.qid
+				GROUP BY a.rid
+			
+		</select>
+		
+		
+		<select id="getQuanList" resultType="quan">
+			select * from quan
+		</select>
+		
+		<insert id="addR" parameterType="role">
+		
+			<selectKey order="AFTER" keyProperty="rid" resultType="integer">
+				select LAST_INSERT_ID();
+			</selectKey>
+		
+			insert into role(rname,rdate) values(#{rname},#{rdate})
+		</insert>
+		
+		<insert id="addRq">
+			insert into role_quan(rid,qid) values(#{rid},#{qid})
+		</insert>
+		
+		<select id="getRoleByRid" resultType="map">
+			select a.*,GROUP_CONCAT(c.qname) as qnames from role a LEFT JOIN role_quan b on a.rid=b.rid LEFT JOIN quan c on b.qid=c.qid
+			GROUP BY a.rid having a.rid=${value}
+		</select>
+		
+		
+		
+</mapper>
